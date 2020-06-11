@@ -1,25 +1,22 @@
 #
+import pandas
+
+
+idx = pandas.IndexSlice
 
 
 # sampling function
-def ts_sampler(T, X, Y, n_folds, test_rate, kind):
-    if kind == 'nofolds':
-        thresh = int((1 - test_rate) * X.shape[0])
-        T_train, X_train, Y_train, T_test, X_test, Y_test = T[:thresh, :], X[:thresh, :], Y[:thresh, :], T[thresh:,
-                                                                                                         :], X[thresh:,
-                                                                                                             :], Y[
-                                                                                                                 thresh:,
-                                                                                                                 :]
-    if kind == 'folded':
-        thresh = int((1 - test_rate) * X.shape[0])
-        T_train, X_train, Y_train, T_test, X_test, Y_test = T[:thresh, :], X[:thresh, :], Y[:thresh, :], T[thresh:,
-                                                                                                         :], X[thresh:,
-                                                                                                             :], Y[
-                                                                                                                 thresh:,
-                                                                                                                 :]
-        fold_length = thresh / n_folds
-        fold_bounds = [(int(j * fold_length), int((j + 1) * fold_length)) for j in range(n_folds)]
-        T_train = [T_train[fold_bounds[j][0]:T_train[fold_bounds[j][1]], :] for j in range(n_folds)]
-        X_train = [X_train[fold_bounds[j][0]:X_train[fold_bounds[j][1]], :] for j in range(n_folds)]
-        Y_train = [Y_train[fold_bounds[j][0]:Y_train[fold_bounds[j][1]], :] for j in range(n_folds)]
-    return T_train, X_train, Y_train, T_test, X_test, Y_test
+def ts_sampler(data, n_folds, test_rate):
+
+    a = data.index.levels[1].values
+
+    thresh = int(a.shape[0] * (1 - test_rate))
+    data_test = data.loc[idx[:, a[(thresh + 1)]:], :]
+
+    prt = thresh / n_folds
+    parts = [(int(j * prt), int((j + 1) * prt)) for j in range(n_folds)]
+    parted = [a[pt[0]:pt[1]] for pt in parts]
+
+    folded = [data.loc[idx[:, fled], :] for fled in parted]
+
+    return folded, data_test
