@@ -11,10 +11,10 @@ metadata = {'name': 'm_utils',
             'download_url': 'https://github.com/redjerdai/m_utils',
             'packages': setuptools.find_packages(),
             'include_package_data': True,
-            'version': '0.0.3.0',
+            'version': '0.0.3.3',
             'long_description': '',
             'python_requires': '>=3.6',
-            'install_requires': ['mkl', 'numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-learn']}# ['numpy==1.18.1', 'xlrd', 'openpyxl', 'pandas', 'mkl']}
+            'install_requires': ['mkl', 'numpy', 'scipy', 'matplotlib', 'pandas', 'scikit-learn']}
 
 
 setup(**metadata)

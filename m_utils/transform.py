@@ -55,14 +55,14 @@ def _percent_it(frame, n_lags):
 
 def percent_it(frame, horizon, exactly=True):
     if exactly:
-        new_columns = [x + str(horizon) for x in frame.columns.values]
+        new_columns = [x + '_PCT' + str(horizon) for x in frame.columns.values]
         frame = _percent_it(frame=frame, n_lags=horizon)
         frame.columns = new_columns
     else:
         new_columns = []
         frames = []
         for j in numpy.arange(start=1, stop=(horizon + 1)):
-            new_columns = new_columns + [x + str(j) for x in frame.columns.values]
+            new_columns = new_columns + [x + '_PCT' + str(j) for x in frame.columns.values]
             frames.append(_percent_it(frame=frame, n_lags=j))
         frame = pandas.concat(frames, axis=1)
         frame.columns = new_columns

@@ -1,40 +1,6 @@
 #
 import numpy
-import pandas
-from scipy import stats
 from matplotlib import pyplot, lines as mlines
-
-
-def get_ols_summary(lm, X, y, names):
-    # https://stackoverflow.com/questions/27928275/find-p-value-significance-in-scikit-learn-linearregression
-
-    params = numpy.append(lm.intercept_, lm.coef_)
-    predictions = lm.predict(X)
-
-    newX = pandas.DataFrame({"Constant": numpy.ones(len(X))}).join(pandas.DataFrame(X))
-    MSE = (sum((y - predictions) ** 2)) / (len(newX) - len(newX.columns))
-
-    # Note if you don't want to use a DataFrame replace the two lines above with
-    # newX = np.append(np.ones((len(X),1)), X, axis=1)
-    # MSE = (sum((y-predictions)**2))/(len(newX)-len(newX[0]))
-
-    var_b = MSE * (numpy.linalg.inv(numpy.dot(newX.T, newX)).diagonal())
-    sd_b = numpy.sqrt(var_b)
-    ts_b = params / sd_b
-
-    p_values = [2 * (1 - stats.t.cdf(numpy.abs(i), (len(newX) - 1))) for i in ts_b]
-
-    sd_b = numpy.round(sd_b, 3)
-    ts_b = numpy.round(ts_b, 3)
-    p_values = numpy.round(p_values, 3)
-    params = numpy.round(params, 4)
-
-    myDF3 = pandas.DataFrame()
-    myDF3["Coefficients"], myDF3["Standard Errors"], myDF3["t values"], myDF3["Probabilities"] = [params, sd_b, ts_b,
-                                                                                                  p_values]
-
-    myDF3.index = numpy.array(['intercept'] + [x for x in names])
-    return myDF3
 
 
 def visualise_predictions(model, X_train, Y_train, X_test, Y_test, time_series=False, quantiles=(.05, .50, .95),
