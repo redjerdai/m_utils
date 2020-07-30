@@ -35,7 +35,7 @@ class LogPctTransformer:
 
     def fit(self, data):
         self.first_row = data[[0], :]
-        self.check_row = data[[0, 1], :]
+        self.check_row = self.transform(data[[0, 1], :])
         self.shape = data.shape
         pass
 
@@ -61,7 +61,7 @@ class LogPctTransformer:
         for j in numpy.arange(data.shape[0]):
             current_row = numpy.exp((data[j, :] + numpy.log(rows_stack[-1])))
             rows_stack.append(current_row)
-        result = numpy.concatenate(rows_stack, axis=1)
+        result = numpy.concatenate(rows_stack, axis=0)
         return result
 
 
@@ -80,6 +80,9 @@ class Whitener:
 
 
 class HypeTan:
+    # Note
+    # for big numbers 'transform' yields 1.0 which could not be 'inverse_transform'_ed because of lack of precision
+
     def __init__(self):
         pass
 
