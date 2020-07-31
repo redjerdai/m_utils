@@ -35,17 +35,18 @@ class LogPctTransformer:
 
     def fit(self, data):
         self.first_row = data[[0], :]
-        self.check_row = self.transform(data[[0, 1], :])
+        self.check_row = numpy.log(data[[1], :]) - numpy.log(data[[0], :])
         self.shape = data.shape
         pass
 
     def transform(self, data):
-        data_log_pct = numpy.log(data[1:, :]) - numpy.log(numpy.roll(data, shift=1, axis=0)[1:, :])
+        data_log_pct = numpy.log(data) - numpy.log(numpy.roll(data, shift=1, axis=0))
+        data_log_pct[0, :] = numpy.nan
         return data_log_pct
 
     def inverse_transform(self, data):
-        if self.shape[0] == (data.shape[0] + 1) and self.shape[1] == data.shape[1]:
-            if (self.check_row == data[[0], :]).all():
+        if self.shape[0] == data.shape[0] and self.shape[1] == data.shape[1]:
+            if (self.check_row == data[[1], :]).all():
                 result = self._inverse_transform(data, self.first_row)
             else:
                 first_row = numpy.ones(shape=(1, data.shape[1]))
@@ -59,8 +60,9 @@ class LogPctTransformer:
         current_row = first_row
         rows_stack = [current_row]
         for j in numpy.arange(data.shape[0]):
-            current_row = numpy.exp((data[j, :] + numpy.log(rows_stack[-1])))
-            rows_stack.append(current_row)
+            if j != 0:
+                current_row = numpy.exp((data[j, :] + numpy.log(rows_stack[-1])))
+                rows_stack.append(current_row)
         result = numpy.concatenate(rows_stack, axis=0)
         return result
 
