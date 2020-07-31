@@ -11,11 +11,9 @@ metadata = {'name': 'm_utils',
             'download_url': 'https://github.com/redjerdai/m_utils',
             'packages': setuptools.find_packages(),
             'include_package_data': True,
-            'version': '0.0.4',
+            'version': '0.0.5.0',
             'long_description': '',
             'python_requires': '>=3.6'}
 
 
 setup(**metadata)
-
-
