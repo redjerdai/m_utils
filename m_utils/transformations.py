@@ -1,5 +1,6 @@
 #
 import numpy
+import pandas
 from sklearn.preprocessing import StandardScaler
 
 
@@ -29,13 +30,15 @@ class PctTransformer:
 class LogPctTransformer:
     def __init__(self):
         self.first_row = None
-        self.check_row = None
+        # self.check_row = None
+        self.last_row = None
         self.shape = None
         pass
 
     def fit(self, data):
         self.first_row = data[[0], :]
-        self.check_row = numpy.log(data[[1], :]) - numpy.log(data[[0], :])
+        # self.check_row = numpy.log(data[[1], :]) - numpy.log(data[[0], :])
+        self.last_row = data[[data.shape[0] - 1], :]
         self.shape = data.shape
         pass
 
@@ -46,14 +49,27 @@ class LogPctTransformer:
 
     def inverse_transform(self, data):
         if self.shape[0] == data.shape[0] and self.shape[1] == data.shape[1]:
+            """
             if (self.check_row == data[[1], :]).all():
                 result = self._inverse_transform(data, self.first_row)
             else:
                 first_row = numpy.ones(shape=(1, data.shape[1]))
                 result = self._inverse_transform(data, first_row)
+            """
+
+            if pandas.isna(data).all(axis=1)[0]:
+                # suppose it is train
+                result = self._inverse_transform(data, self.first_row)
+            else:
+                # suppose it is test
+                result = self._inverse_transform(data, self.last_row)
         else:
+            """
             first_row = numpy.ones(shape=(1, data.shape[1]))
             result = self._inverse_transform(data, first_row)
+            """
+            # suppose it is test
+            result = self._inverse_transform(data, self.last_row)
         return result
 
     def _inverse_transform(self, data, first_row):
