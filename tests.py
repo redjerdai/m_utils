@@ -30,7 +30,7 @@ data_nok = data_nok.values[:, :-1]
 data_nok = numpy.array(data_nok, dtype=numpy.float64)
 
 #
-
+"""
 trf_nok_w = Whitener()
 trf_nok_w.fit(data_nok)
 data_nok_w = trf_nok_w.transform(data_nok)
@@ -40,7 +40,7 @@ trf_nok_h = HypeTan()
 trf_nok_h.fit(data_nok)
 data_nok_h = trf_nok_h.transform(data_nok)
 data_nok__h = trf_nok_h.inverse_transform(data_nok_h)
-
+"""
 trf_nok_p = LogPctTransformer()
 trf_nok_p.fit(data_nok)
 data_nok_p = trf_nok_p.transform(data_nok)
