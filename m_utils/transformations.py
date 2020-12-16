@@ -91,11 +91,11 @@ class LogPctTransformer:
 
         else:
 
-            current_row = self.full_set[-1, :]
+            current_row = self.full_set[-1, :].reshape(1, -1)
             rows_stack = [current_row]
             for j in numpy.arange(data.shape[0]):
                 if j != 0:
-                    current_row = numpy.exp((data[j, :] + numpy.log(rows_stack[-1])))
+                    current_row = numpy.exp((data[j, :] + numpy.log(rows_stack[-1]))).reshape(1, -1)
                     rows_stack.append(current_row)
             result = numpy.concatenate(rows_stack, axis=0)
             return result
